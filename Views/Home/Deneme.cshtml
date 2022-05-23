@@ -1,0 +1,108 @@
+﻿@using WebBilirTask2.Models.Concrete.Entity
+@model List<Card>
+
+<style>
+    .card {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        margin-top: 15px;
+        margin-right: 10px;
+    }
+
+    .Gelir {
+        background-color: #32CD32;
+    }
+
+        .Gelir:hover {
+            background-color: #98FB98;
+        }
+
+    .Gider {
+        background-color: #B22222;
+    }
+
+        .Gider:hover {
+            background-color: #CD5C5C
+        }
+
+    .image {
+        border-radius: 50%;
+        width: 170px;
+        height: 180px;
+        margin-bottom: 10px;
+    }
+
+    .buttonTrash {
+        color: black !important;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-6">
+        <form class="form-group" method="post">
+            <div style="margin-top:15px">
+                <label>Title : </label><input class="form-control" id="input1" type="text" name="Title" value="" required />
+            </div>
+            <div style="margin-top:15px">Type : </div>
+            <select class="form-control" name="Type" style="margin-top:15px;">
+                <option value="Gelir">Gelir</option>
+                <option value="Gider">Gider</option>
+            </select>
+            <div style="margin-top:15px">
+                <label>Value : </label> <span id="span"></span>
+                <input class="form-control" id="range" type="range" value="50" min="1" max="100" name="Value" required />
+            </div>
+            <div style="margin-top:15px">
+                <label>Describtion : </label><input class="form-control" type="text" name="Describtion" required />
+            </div>
+            <div style="margin-top:15px">
+                <label>Image Upload : </label><input class="form-control" type="file" name="ImageUrl" value="" />
+            </div>
+            <button type="submit" class="btn btn-success" style="margin-top:20px">Save</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3 @item.Type card" id="card">
+
+            <img src="@item.ImageUrl" class="image" style="margin-top:10px" alt="Alternate Text" />
+            <table>
+                <tr>
+                    <th>Title: </th>
+                    <td>@item.Title</td>
+                </tr>
+                <tr>
+                    <th>Type: </th>
+                    <td>@item.Type</td>
+                </tr>
+                <tr>
+                    <th>Value: </th>
+                    <td>@item.Value</td>
+                </tr>
+                <tr>
+                    <th>Describtion:</th>
+                    <td>@item.Describtion</td>
+                </tr>
+            </table>
+            <a href="/Home/DeleteButton/@item.CardID"><i class="fa fa-trash buttonTrash" aria-hidden="false"></i></a>
+        </div>
+    }
+</div>
+
+<script>
+    const values = document.getElementById("span");
+    const range = document.getElementById("range");
+
+    values.innerHTML = range.value;
+
+    range.oninput = function () {
+        values.innerHTML = this.value;
+    }
+</script>
