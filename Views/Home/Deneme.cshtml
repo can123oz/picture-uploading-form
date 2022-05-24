@@ -38,11 +38,18 @@
         color: black !important;
         margin-bottom: 10px;
     }
+
+    .saveButton {
+        width: 140px;
+        font-size: x-large;
+        margin-top: 20px;
+    }
 </style>
+
 
 <div class="row">
     <div class="col-6">
-        <form class="form-group" method="post">
+        <form class="form-group" action="/Home/Upload" enctype="multipart/form-data" method="post">
             <div style="margin-top:15px">
                 <label>Title : </label><input class="form-control" id="input1" type="text" name="Title" value="" required />
             </div>
@@ -59,10 +66,24 @@
                 <label>Describtion : </label><input class="form-control" type="text" name="Describtion" required />
             </div>
             <div style="margin-top:15px">
-                <label>Image Upload : </label><input class="form-control" type="file" name="ImageUrl" value="" />
+                <label>Image Upload : </label>
+                <div class="row">
+                    <input onchange="LoadImage(event)" id="imageInput" class="form-control col-11" type="file" name="ImageUrl" style="margin-left: 15px; height: 40px;" />       
+                </div>
+                <div style="margin-top:15px">
+                    <label id="imageLabel" style="display: none;">Image Preview :</label>
+                    <img src="#" class="img-responsive" id="targetImage" width="150" height="150" style="display: none;"/>
+                    <input type="button" onclick="ImageUpload()" id="targetUpload"  class="btn btn-outline-secondary" style="margin-left: 20px; display: none; " value="Upload"/>
+                    <input type="button" onclick="ImageDelete()" id="targetDelete" class="btn btn-danger" style="margin-left: 20px; display: none; " value="Delete"/>
+                </div>
             </div>
-            <button type="submit" class="btn btn-success" style="margin-top:20px">Save</button>
+            <button type="submit" class="btn btn-success saveButton">Save</button>
         </form>
+        <div class="row" style="margin-top:20px;">
+            <div><input type="button" id="incomeFilter" name="incomeFilter" class="btn btn-outline-success" value="Income" /></div>
+            <div><input type="button" id="outcomeFilter" name="outcomeFilter" class="btn btn-outline-danger" value="Outcome" /></div>
+            <div><input type="button" id="showAll" name="showAll" class="btn btn-info" value="Show All" /></div>
+        </div>
     </div>
 </div>
 
@@ -105,4 +126,51 @@
     range.oninput = function () {
         values.innerHTML = this.value;
     }
+</script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+    });
+    function LoadImage(input) { 
+        if (input.target.files && input.target.files[0]) {           
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("#targetImage").attr("src", e.target.result);
+            };
+            reader.readAsDataURL(input.target.files[0]);
+            $("#targetImage").show();
+            $("#targetUpload").show();
+            $("#targetDelete").show();
+            $("#imageLabel").show();
+        }
+    }
+
+    function ImageDelete() {
+        console.log("deletebtn");
+        $("#imageInput").val('');
+        $("#targetImage").hide();
+        $("#targetUpload").hide();
+        $("#targetDelete").hide();
+        $("#imageLabel").hide();
+    }
+
+    function ImageUpload() {
+        console.log("uploadbtn");
+    }
+
+    $("#incomeFilter").click(function () {
+        $(".Gider").hide();
+        $(".Gelir").show();
+    });
+
+    $("#outcomeFilter").click(function () {
+        $(".Gider").show();
+        $(".Gelir").hide();
+    });
+
+    $("#showAll").click(function () {
+        $(".card").show();
+    });
+
 </script>

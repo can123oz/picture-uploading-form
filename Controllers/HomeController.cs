@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebBilirTask2.Models;
@@ -31,15 +33,30 @@ namespace WebBilirTask2.Controllers
             return View();
         }
 
-        public IActionResult Deneme(Card card)
+
+        public async Task<IActionResult> Upload(Card card, IFormFile ImageUrl)
         {
-            var value = db.Cards.ToList();
-            if (card.Title == null)
+            if (ImageUrl.Length > 0)
             {
-                return View(value);
+                var filepath = Path.Combine(Directory.GetCurrentDirectory());
+                string filepathDirectory = filepath + "/wwwroot/Uploads/Images" + ImageUrl.FileName;
+
+                using (var stream = new FileStream(filepathDirectory, FileMode.Create))
+                {
+                    await ImageUrl.CopyToAsync(stream);
+                }
+                card.ImageUrl = "/Uploads/Images" + ImageUrl.FileName;
             }
             db.Cards.Add(card);
             db.SaveChanges();
+
+            return RedirectToAction("Deneme");
+        }
+
+
+        public ViewResult Deneme()
+        {
+            var value = db.Cards.ToList();
             return View(value);
         }
 
